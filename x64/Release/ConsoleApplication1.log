@@ -1,0 +1,10 @@
+﻿  A.c
+  import_dll_utils.c
+c:\users\hz\desktop\amesim_use\ab\ametest\consoleapplication1\consoleapplication1\import_dll_utils.c(85): warning C4133: “函数”: 从“char *”到“LPCWSTR”的类型不兼容
+  ConsoleApplication1.cpp
+  drone_asd.cpp
+  FlatTwin.cpp
+  正在生成代码
+  All 7 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  已完成代码的生成
+  ConsoleApplication1.vcxproj -> C:\Users\HZ\Desktop\amesim_use\Ab\AMEtest\ConsoleApplication1\x64\Release\ConsoleApplication1.exe

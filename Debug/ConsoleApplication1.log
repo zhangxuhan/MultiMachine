@@ -1,0 +1,9 @@
+﻿  A.c
+  import_dll_utils.c
+c:\users\hz\desktop\amesim_use\ab\ametest\consoleapplication1\consoleapplication1\import_dll_utils.c(85): warning C4133: “函数”: 从“char *”到“LPCWSTR”的类型不兼容
+  正在生成代码...
+  ConsoleApplication1.cpp
+  drone_asd.cpp
+  FlatTwin.cpp
+  正在生成代码...
+  ConsoleApplication1.vcxproj -> C:\Users\HZ\Desktop\amesim_use\Ab\AMEtest\ConsoleApplication1\Debug\ConsoleApplication1.exe
