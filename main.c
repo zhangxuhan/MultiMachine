@@ -24,7 +24,8 @@ float recvdata[RecvataAmount];//x y z yaw boo1   5
 float recvForce[6];//Force x y z  Movement x y z   6
 static float recvdata_1[5];
 double syncTime = 0;
-int RecvLock = 0;
+int RecvLock[TestNum] = {1};
+int RecvLockNum = 0;
 int SendLock = 0;
 int ExeOK = 0;
 
@@ -39,11 +40,112 @@ typedef struct ViewStruct
 	double z;
 }ViewStruct;
 
-DWORD WINAPI AddDrone_1Proc(LPVOID lpParam)//add 1
+DWORD WINAPI AddDrone_0Proc(LPVOID lpParam)//all 2
 {
 	AddDrone();
 	return 0;
 }
+
+DWORD WINAPI AddDrone_1Proc(LPVOID lpParam)//add 3
+{
+	AddDrone_1();
+	return 0;
+}
+DWORD WINAPI AddDrone_2Proc(LPVOID lpParam)//add 1
+{
+	AddDrone_2();
+	return 0;
+}
+DWORD WINAPI AddDrone_3Proc(LPVOID lpParam)//add 5
+{
+	AddDrone_3();
+	return 0;
+}
+
+DWORD WINAPI AddDrone_4Proc(LPVOID lpParam)//add 5
+{
+	AddDrone_4();
+	return 0;
+}
+DWORD WINAPI AddDrone_5Proc(LPVOID lpParam)//add 5
+{
+	AddDrone_5();
+	return 0;
+}
+DWORD WINAPI AddDrone_6Proc(LPVOID lpParam)//add 5
+{
+	AddDrone_6();
+	return 0;
+}
+DWORD WINAPI AddDrone_7Proc(LPVOID lpParam)//add 5
+{
+	AddDrone_7();
+	return 0;
+}
+DWORD WINAPI AddDrone_8Proc(LPVOID lpParam)//add 5
+{
+	AddDrone_8();
+	return 0;
+}
+DWORD WINAPI AddDrone_9Proc(LPVOID lpParam)
+{
+	AddDrone_9();
+	return 0;
+}
+DWORD WINAPI AddDrone_10Proc(LPVOID lpParam)
+{
+	AddDrone_10();
+	return 0;
+}
+DWORD WINAPI AddDrone_11Proc(LPVOID lpParam)
+{
+	AddDrone_11();
+	return 0;
+}
+DWORD WINAPI AddDrone_12Proc(LPVOID lpParam)
+{
+	AddDrone_12();
+	return 0;
+}
+DWORD WINAPI AddDrone_13Proc(LPVOID lpParam)
+{
+	AddDrone_13();
+	return 0;
+}
+DWORD WINAPI AddDrone_14Proc(LPVOID lpParam)
+{
+	AddDrone_14();
+	return 0;
+}
+DWORD WINAPI AddDrone_15Proc(LPVOID lpParam)
+{
+	AddDrone_15();
+	return 0;
+}
+DWORD WINAPI AddDrone_16Proc(LPVOID lpParam)
+{
+	AddDrone_16();
+	return 0;
+}
+DWORD WINAPI AddDrone_17Proc(LPVOID lpParam)
+{
+	AddDrone_17();
+	return 0;
+}
+DWORD WINAPI AddDrone_18Proc(LPVOID lpParam)//all 20
+{
+	AddDrone_18();
+	return 0;
+}
+DWORD WINAPI AddDrone_19Proc(LPVOID lpParam)//;21
+{
+	AddDrone_19();
+	return 0;
+}
+
+
+
+
 
 DWORD WINAPI RecvForceProc(LPVOID lpParam)//add 1
 {
@@ -142,13 +244,11 @@ DWORD WINAPI ThreadProc(LPVOID lpParam)//Send
 	while (1) {
 		if (sendstate[0] == 1 && sendstate[1] == 1)
 		{
-			//printf("sbuf[0]=%d\n", sbuf[0]);
 			//memcpy(sendbuf, senddata, sizeof(senddata));
 			sendto(sclient, senddata, sizeof(senddata), 0, (SOCKADDR*)&clientAddr, len);
 			//send(sclient, senddata, sizeof(senddata), 0);
 			//printf("udpx= %f\n", senddata[3]);
 			//Sleep(50);
-			//SendLock = 0;
 			sendstate[0] = 0;
 			sendstate[1] = 0;
 		}
@@ -182,13 +282,9 @@ char* UnicodeToGB2312(const wchar_t* szUnicodeString)
 }
 
 
-
-/* A simple example of a program that loads a DLL
-* (name provided by argument list) and calls the functions
-* in this DLL to do a simple simulation */
 int main(int argc, char *argv[])
 {
-	//AMEOpenAmeF0ile("1");
+	//AMEOpenAmeFile("1");
 	double samptime = 0.05; /* Sample interval */
 	double printinter = samptime / 5.0; /* How often will AMESim model write the result file */
 	double tol = 1e-5; /* Solver tolerance */
@@ -278,17 +374,7 @@ int main(int argc, char *argv[])
 		int ame_says_numstates;
 		int ame_says_numimplicit;
 		amedll.AMEInitSizes(&ame_says_numinputs, &ame_says_numoutputs, &ame_says_numstates, &ame_says_numimplicit);
-		//fprintf(stdout,
-		//	"MASTER> AMESim model have \n %d inputs \n %d outputs \n %d state variables \n %d implicit variables\n",
-		//	ame_says_numinputs, ame_says_numoutputs, ame_says_numstates, ame_says_numimplicit);
 
-		/*In this case we only accept systems with two inputs and three outputs. */
-		/*if (ame_says_numinputs != 5)
-		{
-			fprintf(stderr, "Expected model with 2 inputs. Got %d.\n", ame_says_numinputs);
-			exit(1);
-		}
-		*/
 		numinputs_to_model = ame_says_numinputs;//5
 		numoutputs_from_model = ame_says_numoutputs;//6
 	}
@@ -296,14 +382,6 @@ int main(int argc, char *argv[])
 	/* Create the input/output arrays */
 	inputs = (double*)calloc(1, numinputs_to_model * sizeof(double));//Allocates the required memory space and returns a pointer to it
 	outputs = (double*)calloc(1, numoutputs_from_model * sizeof(double));
-
-
-
-	//pthread_mutex_init(&mut, NULL);
-	//udp Recv
-	DWORD dwThreadId;//线程ID
-	DWORD dwThreadId1;
-	DWORD dwThreadId2;
 
 
 
@@ -407,19 +485,69 @@ int main(int argc, char *argv[])
 	double revdata[255];
 
 
+
+	//udp Recv
+	DWORD dwThreadId;//线程ID
+	DWORD dwThreadId1;
+	DWORD dwThreadId2;
+	DWORD dwThreadId3;
+	DWORD dwThreadId4;
+	DWORD dwThreadId5;
+	DWORD dwThreadId6;
+	DWORD dwThreadId7;
+	DWORD dwThreadId8;
+	DWORD dwThreadId9;
+	DWORD dwThreadId10;
+	DWORD dwThreadId11;
+	DWORD dwThreadId12;
+	DWORD dwThreadId13;
+	DWORD dwThreadId14;
+	DWORD dwThreadId15;
+	DWORD dwThreadId16;
+	DWORD dwThreadId17;
+	DWORD dwThreadId18;
+	DWORD dwThreadId19;
+	DWORD dwThreadId20;
 	//SEND
 	CreateThread(NULL, 0, ThreadProc, 0, 0, &dwThreadId);
-	//sendstate = 1;
+	//RecvForce
+	CreateThread(NULL, 0, RecvForceProc, 0, 0, &dwThreadId1);
 
 
-	CreateThread(NULL, 0, AddDrone_1Proc, 0, 0, &dwThreadId1);//AddDrone
+	//AddDrone
+	CreateThread(NULL, 0, AddDrone_0Proc, 0, 0, &dwThreadId2);//AddDrone
+	CreateThread(NULL, 0, AddDrone_1Proc, 0, 0, &dwThreadId3);
+	//CreateThread(NULL, 0, AddDrone_2Proc, 0, 0, &dwThreadId4);
+	//CreateThread(NULL, 0, AddDrone_3Proc, 0, 0, &dwThreadId5);
+	//CreateThread(NULL, 0, AddDrone_4Proc, 0, 0, &dwThreadId6);
+	//CreateThread(NULL, 0, AddDrone_5Proc, 0, 0, &dwThreadId7);
+	//CreateThread(NULL, 0, AddDrone_6Proc, 0, 0, &dwThreadId8);
+	//CreateThread(NULL, 0, AddDrone_7Proc, 0, 0, &dwThreadId9);//9台
+	//CreateThread(NULL, 0, AddDrone_8Proc, 0, 0, &dwThreadId10);
+	//CreateThread(NULL, 0, AddDrone_9Proc, 0, 0, &dwThreadId11);
+	//CreateThread(NULL, 0, AddDrone_10Proc, 0, 0, &dwThreadId12);
+	//CreateThread(NULL, 0, AddDrone_11Proc, 0, 0, &dwThreadId13);
+	//CreateThread(NULL, 0, AddDrone_12Proc, 0, 0, &dwThreadId14);
+	//CreateThread(NULL, 0, AddDrone_13Proc, 0, 0, &dwThreadId15);
+	//CreateThread(NULL, 0, AddDrone_14Proc, 0, 0, &dwThreadId16);
+	//CreateThread(NULL, 0, AddDrone_15Proc, 0, 0, &dwThreadId17);
+	//CreateThread(NULL, 0, AddDrone_16Proc, 0, 0, &dwThreadId18);
+	//CreateThread(NULL, 0, AddDrone_17Proc, 0, 0, &dwThreadId19);
+	//CreateThread(NULL, 0, AddDrone_18Proc, 0, 0, &dwThreadId20);// all 20
 
-
-	CreateThread(NULL, 0, RecvForceProc, 0, 0, &dwThreadId2);//RecvForce
+	
 	recvforcestate = 1;
 	sClient = accept(serSocket, (SOCKADDR *)&remoteAddr, &nAddrlen);
-	/* Do a simple run up till 10 seconds */
-	while (time <= 200)
+
+
+
+	for (int m = 0; m < TestNum; m++) {
+		RecvLock[m] = 1;
+	}
+
+
+
+	while (time <= SimulationTime)
 	{
 		//ret = recvfrom(serSocket, revdata, 255, 0, (SOCKADDR*)&remoteAddr, &nAddrlen);
 		//FD_ZERO(&rfd);           //总是这样先清空一个描述符集
@@ -434,12 +562,24 @@ int main(int argc, char *argv[])
 		/* SET THE INPUTS TO THE AMESIM MODEL HERE */
 		int INTTime = (int)(time * 10);//0.1s
 
-		if (ret > 0 && RecvLock == 0) {
+		//同步机制
+		//for (int m = 0; m < TestNum; m++) {
+		//	if (RecvLock[m] == 1) {
+		//		RecvLockNum = RecvLockNum +1;
+		//	}
+		//	else {
+		//		RecvLockNum = 0;
+		//		break;
+		//	}
+		//}
+		RecvLockNum = TestNum;
+		printf("RecvLockNum=%d\r\n", RecvLockNum);
+		if (ret > 0 && RecvLockNum == TestNum) {
 			memcpy(recvdata, revdata, sizeof(recvdata));
-			//printf("recvdata[0]=%f\n", recvdata[0]);
 
-			RecvLock = 1;
-			//Sleep(1000);//run
+			RecvLockNum = 0;
+			RecvLock[0] = 0;
+
 			for (i = 0; i < numinputs_to_model; i++)
 			{
 				if (i == 0)
@@ -469,6 +609,8 @@ int main(int argc, char *argv[])
 									  = 6 */
 				}
 			}
+
+
 			for (i = 0; i < numinputs_to_model; i++)
 			{
 				printf("inputs1[%d] = %f\n", i, inputs[i]);//x
@@ -480,8 +622,6 @@ int main(int argc, char *argv[])
 				}
 			}
 
-			//}
-			//pthread_mutex_unlock(&mut);
 			pthread_mutex_lock(&mut);
 			if (!model_initialised)
 			{
@@ -495,8 +635,6 @@ int main(int argc, char *argv[])
 					disconpr, runstats, runtype, thesolvertype,
 					numinputs_to_model, numoutputs_from_model, inputs, outputs);
 				model_initialised = 1;
-
-				//CreateThread(NULL, 0, AddDrone_1Proc, 0, 0, &dwThreadId1);//AddDrone
 			}
 			pthread_mutex_unlock(&mut);
 
@@ -520,13 +658,12 @@ int main(int argc, char *argv[])
 			* the AMESim model at time "time".
 			* In this simple example we only print the values. */
 
-			fprintf(stdout, "time = %.3f\t", time);
-			for (i = 0; i < numoutputs_from_model; i++)//numoutputs_from_model = 6
-			{
-				fprintf(stdout, "out%d = %.3f\t", i, outputs[i]);
-			}
-			fprintf(stdout, "\n");
-			//pthread_mutex_lock(&mut);
+			fprintf(stdout, "time0 = %.3f\t", time);
+			//for (i = 0; i < numoutputs_from_model; i++)//numoutputs_from_model = 6
+			//{
+			//	fprintf(stdout, "out%d = %.3f\t", i, outputs[i]);
+			//}
+			//fprintf(stdout, "\n");
 
 
 
@@ -534,7 +671,7 @@ int main(int argc, char *argv[])
 				senddata[i] = (float)(outputs[i]);
 			}
 			sendstate[0] = 1;
-			//SendLock += 1;
+
 
 
 			//printf("senddata[3] = %f\n", senddata[3]);//x
@@ -548,7 +685,7 @@ int main(int argc, char *argv[])
 			/* Update the time for the next step */
 			time += samptime;
 			syncTime = time;
-			//RecvLock = 0;
+			RecvLock[0] = 1;
 		}
 	}
 
@@ -564,13 +701,11 @@ int main(int argc, char *argv[])
 	freeamesimdll it is not possible to use the model until a
 	loadamesimdll has been done.*/
 	printf("DONE AND CLOSE\n");
-	//sendstate[0] = 0;
 	recvforcestate = 0;
 	unloadamesimdll(&amedll);
 	closesocket(serSocket);
 	WSACleanup();
 	//CloseHandle(dwThreadId);
 	system("pause");
-	/* Return 0 - to indicate success */
 	return 0;
 }

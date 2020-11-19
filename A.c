@@ -365,7 +365,7 @@
 //
 //
 //	/* Do a simple run up till 10 seconds */  
-//	while (time <= 200)
+//	while (time <= SimulationTime)
 //	{
 //		//ret = recvfrom(serSocket, revdata, 255, 0, (SOCKADDR*)&remoteAddr, &nAddrlen);
 //		/* SET THE INPUTS TO THE AMESIM MODEL HERE */

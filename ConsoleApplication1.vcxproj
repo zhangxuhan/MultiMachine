@@ -231,9 +231,27 @@
     <ClCompile Include="main_integration.c" />
     <ClCompile Include="main_integration_udp.c" />
     <ClCompile Include="main_testError.c" />
-    <ClCompile Include="MultiMachine\AddDrone_1.c" />
+    <ClCompile Include="MultiActor\AddDrone_1.c" />
+    <ClCompile Include="MultiActor\AddDrone_10.c" />
+    <ClCompile Include="MultiActor\AddDrone_11.c" />
+    <ClCompile Include="MultiActor\AddDrone_12.c" />
+    <ClCompile Include="MultiActor\AddDrone_13.c" />
+    <ClCompile Include="MultiActor\AddDrone_14.c" />
+    <ClCompile Include="MultiActor\AddDrone_15.c" />
+    <ClCompile Include="MultiActor\AddDrone_16.c" />
+    <ClCompile Include="MultiActor\AddDrone_17.c" />
+    <ClCompile Include="MultiActor\AddDrone_18.c" />
+    <ClCompile Include="MultiActor\AddDrone_19.c" />
+    <ClCompile Include="MultiActor\AddDrone_2.c" />
+    <ClCompile Include="MultiActor\AddDrone_3.c" />
+    <ClCompile Include="MultiActor\AddDrone_4.c" />
+    <ClCompile Include="MultiActor\AddDrone_5.c" />
+    <ClCompile Include="MultiActor\AddDrone_6.c" />
+    <ClCompile Include="MultiActor\AddDrone_7.c" />
+    <ClCompile Include="MultiActor\AddDrone_8.c" />
+    <ClCompile Include="MultiActor\AddDrone_9.c" />
     <ClCompile Include="Test_PID.c" />
-    <ClCompile Include="AddDrone.c" />
+    <ClCompile Include="AddDrone_0.c" />
     <ClCompile Include="main1.c" />
   </ItemGroup>
   <ItemGroup>

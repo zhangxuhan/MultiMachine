@@ -393,7 +393,7 @@
 //
 //
 //	/* Do a simple run up till 10 seconds */  
-//	while (time <= 200)
+//	while (time <= SimulationTime)
 //	{
 //		//ret = recvfrom(serSocket, revdata, 255, 0, (SOCKADDR*)&remoteAddr, &nAddrlen);
 //		FD_ZERO(&rfd);           //总是这样先清空一个描述符集

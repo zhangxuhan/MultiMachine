@@ -1,16 +1,14 @@
 #define _CRT_SECURE_NO_WARNINGS
 
-
+#define WhichPlane 1//第几架机
 
 #include "..\AddDrone.h"
-
 
 
 #pragma comment(lib, "pthreadVC2.lib")
 void AddDrone_1()
 {
-	pthread_mutex_init(&mut, NULL);
-	//AMEOpenAmeF0ile("1");
+	//pthread_mutex_init(&mut, NULL);
 	double samptime = 0.05; /* Sample interval */
 	double printinter = samptime / 5.0; /* How often will AMESim model write the result file */
 	double tol = 1e-5; /* Solver tolerance */
@@ -39,7 +37,7 @@ void AddDrone_1()
 	char *libname = "..\\drone_asd_ectype_.dll";
 #endif
 #ifdef DroneWithError
-	char *libname = "..\\drone_asd_error1_.dll";
+	char *libname = "..\\drone_asd_error2_.dll";
 #endif // DroneWithError
 
 	if (!loadamesimdll(libname, &amedll))
@@ -87,33 +85,33 @@ void AddDrone_1()
 	}
 	
 
-	while (time <= 200)
+	while (time <= SimulationTime)
 	{
 		//Sleep(1);
-		if (RecvLock == 1) {
-			
+		if (RecvLockNum == TestNum) {
+			RecvLock[2] = 0;
 			//pthread_mutex_lock(&mut);
 			for (i = 0; i < numinputs_to_model; i++)
 			{
 				if (i == 0)
 				{
-					inputs[i] = recvdata[5]; /* x */
+					inputs[i] = recvdata[RecvdData_Single * WhichPlane]; /* x */
 				}
 				else if (i == 1)
 				{
-					inputs[i] = recvdata[6]; /* y */
+					inputs[i] = recvdata[RecvdData_Single * WhichPlane +1]; /* y */
 				}
 				else if (i == 2)
 				{
-					inputs[i] = recvdata[7]; /*z */
+					inputs[i] = recvdata[RecvdData_Single * WhichPlane + 2]; /*z */
 				}
 				else if (i == 3)
 				{
-					inputs[i] = recvdata[8]; /* yaw */
+					inputs[i] = recvdata[RecvdData_Single * WhichPlane + 3]; /* yaw */
 				}
 				else if (i == 4)
 				{
-					inputs[i] = recvdata[9]; /* bool */
+					inputs[i] = recvdata[RecvdData_Single * WhichPlane + 4]; /* bool */
 				}
 				else
 				{
@@ -134,20 +132,19 @@ void AddDrone_1()
 				pthread_mutex_unlock(&mut);
 			}
 			
-			pthread_mutex_lock(&mut);
+			//pthread_mutex_lock(&mut);
 			amedll.AMEdoAStep2(time, numinputs_to_model, numoutputs_from_model, inputs, outputs);
-			pthread_mutex_unlock(&mut);
+			//pthread_mutex_unlock(&mut);
 
 
 			for (i = 0; i < numinputs_to_model; i++)
 			{
-				printf("inputs2[%d] = %f\n", i, inputs[i]);//x
+				printf("inputs3[%d] = %f\n", i, inputs[i]);//x
 			}
-			//pthread_mutex_unlock(&mut);
-			fprintf(stdout, "time2 = %.3f\t", time);
+			fprintf(stdout, "time3 = %.3f\t", time);
 			for (i = 0; i < numoutputs_from_model; i++)//numoutputs_from_model = 6
 			{
-				fprintf(stdout, "out2_%d = %.3f\t", i, outputs[i]);
+				fprintf(stdout, "out3_%d = %.3f\t", i, outputs[i]);
 			}
 			fprintf(stdout, "\n");
 
@@ -155,22 +152,15 @@ void AddDrone_1()
 
 
 			pthread_mutex_lock(&mut);
-
-			for (int i = 6; i < 12; i++) { //6-11
-				senddata[i] = (float)(outputs[i - 6]);
-			}
-			//SendLock += 1;
+			//for (int i = (SendData_Single * WhichPlane); 
+			//	i < (SendData_Single * WhichPlane + SendData_Single); i++) { //6-11
+			//	senddata[i] = (float)(outputs[i - (SendData_Single * WhichPlane)]);
+			//}
 			pthread_mutex_unlock(&mut);
-			sendstate[1] = 1;
-			
-			//printf("senddata[9] = %f\n", senddata[9]);//x1
+
 
 			time += samptime;
-			RecvLock = 0;
-
-			//ExeOK = 1;
-			//time = syncTime;
-			//Sleep(100);
+			RecvLock[2] = 1;
 		}
 	}
 	amedll.AMETerminate();

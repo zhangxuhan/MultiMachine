@@ -13,7 +13,7 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="源文件\MultiMachine">
+    <Filter Include="源文件\MultiActor">
       <UniqueIdentifier>{b66e1e53-ce3b-4a79-aa35-497996e020e8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -39,9 +39,6 @@
     <ClCompile Include="Test_PID.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="AddDrone.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="main1.c">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -54,8 +51,65 @@
     <ClCompile Include="main_integration_udp.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="MultiMachine\AddDrone_1.c">
-      <Filter>源文件\MultiMachine</Filter>
+    <ClCompile Include="MultiActor\AddDrone_1.c">
+      <Filter>源文件\MultiActor</Filter>
+    </ClCompile>
+    <ClCompile Include="MultiActor\AddDrone_2.c">
+      <Filter>源文件\MultiActor</Filter>
+    </ClCompile>
+    <ClCompile Include="MultiActor\AddDrone_3.c">
+      <Filter>源文件\MultiActor</Filter>
+    </ClCompile>
+    <ClCompile Include="AddDrone_0.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MultiActor\AddDrone_5.c">
+      <Filter>源文件\MultiActor</Filter>
+    </ClCompile>
+    <ClCompile Include="MultiActor\AddDrone_6.c">
+      <Filter>源文件\MultiActor</Filter>
+    </ClCompile>
+    <ClCompile Include="MultiActor\AddDrone_7.c">
+      <Filter>源文件\MultiActor</Filter>
+    </ClCompile>
+    <ClCompile Include="MultiActor\AddDrone_4.c">
+      <Filter>源文件\MultiActor</Filter>
+    </ClCompile>
+    <ClCompile Include="MultiActor\AddDrone_8.c">
+      <Filter>源文件\MultiActor</Filter>
+    </ClCompile>
+    <ClCompile Include="MultiActor\AddDrone_9.c">
+      <Filter>源文件\MultiActor</Filter>
+    </ClCompile>
+    <ClCompile Include="MultiActor\AddDrone_10.c">
+      <Filter>源文件\MultiActor</Filter>
+    </ClCompile>
+    <ClCompile Include="MultiActor\AddDrone_11.c">
+      <Filter>源文件\MultiActor</Filter>
+    </ClCompile>
+    <ClCompile Include="MultiActor\AddDrone_12.c">
+      <Filter>源文件\MultiActor</Filter>
+    </ClCompile>
+    <ClCompile Include="MultiActor\AddDrone_13.c">
+      <Filter>源文件\MultiActor</Filter>
+    </ClCompile>
+    <ClCompile Include="MultiActor\AddDrone_14.c">
+      <Filter>源文件\MultiActor</Filter>
+    </ClCompile>
+    <ClCompile Include="MultiActor\AddDrone_15.c">
+      <Filter>源文件\MultiActor</Filter>
+    </ClCompile>
+    <ClCompile Include="MultiActor\AddDrone_16.c">
+      <Filter>源文件\MultiActor</Filter>
+    </ClCompile>
+    <ClCompile Include="MultiActor\AddDrone_17.c">
+      <Filter>源文件\MultiActor</Filter>
+    </ClCompile>
+    <ClCompile Include="MultiActor\AddDrone_18.c">
+      <Filter>源文件\MultiActor</Filter>
+    </ClCompile>
+    <ClCompile Include="MultiActor\AddDrone_19.c">
+      <Filter>源文件\MultiActor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

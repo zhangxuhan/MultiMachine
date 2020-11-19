@@ -363,7 +363,7 @@
 //	recvforcestate = 1;
 ////	sClient = accept(serSocket, (SOCKADDR *)&remoteAddr, &nAddrlen);
 //	/* Do a simple run up till 10 seconds */
-//	while (time <= 200)
+//	while (time <= SimulationTime)
 //	{
 //
 //		if (!model_initialised)
