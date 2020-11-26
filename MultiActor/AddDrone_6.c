@@ -84,18 +84,20 @@ void AddDrone_6()
 
 	}
 
-
+	FILE *file = fopen(File7, "wb+");
 	while (time <= SimulationTime)
 	{
 		//Sleep(1);
 		if (RecvLockNum == TestNum) {
 			RecvLock[7] = 0;
+			RecvLockNum = 0;
 			//pthread_mutex_lock(&mut);
 			for (i = 0; i < numinputs_to_model; i++)
 			{
 				if (i == 0)
 				{
-					inputs[i] = recvdata[RecvdData_Single * WhichPlane]; /* x */
+					inputs[i] = -90;
+					//inputs[i] = recvdata[RecvdData_Single * WhichPlane]; /* x */
 				}
 				else if (i == 1)
 				{
@@ -147,7 +149,12 @@ void AddDrone_6()
 			//	fprintf(stdout, "out4_%d = %.3f\t", i, outputs[i]);
 			//}
 			//fprintf(stdout, "\n");
-
+			fprintf(file, "time = %.3f\t", time);
+			for (i = 0; i < numoutputs_from_model; i++)//numoutputs_from_model = 6
+			{
+				fprintf(file, "out_%d = %.3f\t", i, outputs[i]);
+			}
+			fprintf(file, "\n");
 
 
 
@@ -163,6 +170,7 @@ void AddDrone_6()
 			RecvLock[7] = 1;
 		}
 	}
+	fclose(file);
 	amedll.AMETerminate();
 	unloadamesimdll(&amedll);
 	system("pause");

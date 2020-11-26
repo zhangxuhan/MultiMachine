@@ -1,6 +1,8 @@
 ﻿  AddDrone_0.c
+c:\users\hz\desktop\amesim_use\new_labsforpid\multimachine\adddrone_0.c : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
 c:\users\hz\desktop\amesim_use\new_labsforpid\multimachine\adddrone.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
   AddDrone_1.c
+c:\users\hz\desktop\amesim_use\new_labsforpid\multimachine\multiactor\adddrone_1.c : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
 c:\users\hz\desktop\amesim_use\new_labsforpid\multimachine\adddrone.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
   AddDrone_10.c
 c:\users\hz\desktop\amesim_use\new_labsforpid\multimachine\adddrone.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
@@ -49,7 +51,7 @@ c:\users\hz\desktop\amesim_use\new_labsforpid\multimachine\main.c(235): warning 
   c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\winsock2.h(1831): note: 参见“inet_addr”的声明
 c:\users\hz\desktop\amesim_use\new_labsforpid\multimachine\main.c(213): warning C4101: “data”: 未引用的局部变量
 c:\users\hz\desktop\amesim_use\new_labsforpid\multimachine\main.c(342): warning C4133: “函数”: 从“char *”到“const wchar_t *”的类型不兼容
-c:\users\hz\desktop\amesim_use\new_labsforpid\multimachine\main.c(561): warning C4133: “函数”: 从“double [255]”到“char *”的类型不兼容
+c:\users\hz\desktop\amesim_use\new_labsforpid\multimachine\main.c(569): warning C4133: “函数”: 从“double [255]”到“char *”的类型不兼容
 c:\users\hz\desktop\amesim_use\new_labsforpid\multimachine\main.c(334): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
 c:\users\hz\desktop\amesim_use\new_labsforpid\multimachine\main.c(506): warning C4101: “dwThreadId16”: 未引用的局部变量
 c:\users\hz\desktop\amesim_use\new_labsforpid\multimachine\main.c(504): warning C4101: “dwThreadId14”: 未引用的局部变量
@@ -57,6 +59,7 @@ c:\users\hz\desktop\amesim_use\new_labsforpid\multimachine\main.c(509): warning 
 c:\users\hz\desktop\amesim_use\new_labsforpid\multimachine\main.c(498): warning C4101: “dwThreadId8”: 未引用的局部变量
 c:\users\hz\desktop\amesim_use\new_labsforpid\multimachine\main.c(499): warning C4101: “dwThreadId9”: 未引用的局部变量
 c:\users\hz\desktop\amesim_use\new_labsforpid\multimachine\main.c(505): warning C4101: “dwThreadId15”: 未引用的局部变量
+c:\users\hz\desktop\amesim_use\new_labsforpid\multimachine\main.c(493): warning C4101: “dwThreadId3”: 未引用的局部变量
 c:\users\hz\desktop\amesim_use\new_labsforpid\multimachine\main.c(508): warning C4101: “dwThreadId18”: 未引用的局部变量
 c:\users\hz\desktop\amesim_use\new_labsforpid\multimachine\main.c(500): warning C4101: “dwThreadId10”: 未引用的局部变量
 c:\users\hz\desktop\amesim_use\new_labsforpid\multimachine\main.c(495): warning C4101: “dwThreadId5”: 未引用的局部变量
@@ -65,6 +68,7 @@ c:\users\hz\desktop\amesim_use\new_labsforpid\multimachine\main.c(494): warning 
 c:\users\hz\desktop\amesim_use\new_labsforpid\multimachine\main.c(510): warning C4101: “dwThreadId20”: 未引用的局部变量
 c:\users\hz\desktop\amesim_use\new_labsforpid\multimachine\main.c(501): warning C4101: “dwThreadId11”: 未引用的局部变量
 c:\users\hz\desktop\amesim_use\new_labsforpid\multimachine\main.c(503): warning C4101: “dwThreadId13”: 未引用的局部变量
+c:\users\hz\desktop\amesim_use\new_labsforpid\multimachine\main.c(492): warning C4101: “dwThreadId2”: 未引用的局部变量
 c:\users\hz\desktop\amesim_use\new_labsforpid\multimachine\main.c(507): warning C4101: “dwThreadId17”: 未引用的局部变量
 c:\users\hz\desktop\amesim_use\new_labsforpid\multimachine\main.c(496): warning C4101: “dwThreadId6”: 未引用的局部变量
 c:\users\hz\desktop\amesim_use\new_labsforpid\multimachine\main.c(497): warning C4101: “dwThreadId7”: 未引用的局部变量

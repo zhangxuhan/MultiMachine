@@ -90,6 +90,7 @@ void AddDrone_10()
 		//Sleep(1);
 		if (RecvLockNum == TestNum) {
 			RecvLock[TestPlane] = 0;
+			RecvLockNum = 0;
 			//pthread_mutex_lock(&mut);
 			for (i = 0; i < numinputs_to_model; i++)
 			{

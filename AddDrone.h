@@ -20,9 +20,25 @@
 #define RecvataAmount RecvdData_Single*DroneNum
 #define DroneWithError //报错的两架
 //#define DroneWithLag
-#define SimulationTime 210
+#define SimulationTime 21000
+
+#define File0 "opt\\0.txt"
+#define File1 "opt\\1.txt"
+#define File2 "opt\\2.txt"
+#define File3 "opt\\3.txt"
+#define File4 "opt\\4.txt"
+#define File5 "opt\\5.txt"
+#define File6 "opt\\6.txt"
+#define File7 "opt\\7.txt"
+#define File8 "opt\\8.txt"
+#define File9 "opt\\9.txt"
+#define File10 "opt\\10.txt"
+#define File11 "opt\\11.txt"
+
 pthread_t thread[10]; //创建线程函数返回类型
 pthread_mutex_t mut; //互斥锁类型
+HANDLE  g_hThreadEvent[TestNum];
+HANDLE hThread[TestNum];
 
 
 typedef struct ForceStruct

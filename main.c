@@ -24,7 +24,7 @@ float recvdata[RecvataAmount];//x y z yaw boo1   5
 float recvForce[6];//Force x y z  Movement x y z   6
 static float recvdata_1[5];
 double syncTime = 0;
-int RecvLock[TestNum] = {1};
+int RecvLock[TestNum];
 int RecvLockNum = 0;
 int SendLock = 0;
 int ExeOK = 0;
@@ -508,16 +508,22 @@ int main(int argc, char *argv[])
 	DWORD dwThreadId18;
 	DWORD dwThreadId19;
 	DWORD dwThreadId20;
+
+	//初始化事件和关键段 自动置位,初始触发的匿名事件 
+	for (int i = 0; i < TestNum; i++) {
+		g_hThreadEvent[i] = CreateEvent(NULL, FALSE, FALSE, NULL);
+	}
+
+
 	//SEND
 	CreateThread(NULL, 0, ThreadProc, 0, 0, &dwThreadId);
 	//RecvForce
 	CreateThread(NULL, 0, RecvForceProc, 0, 0, &dwThreadId1);
 
-
 	//AddDrone
-	CreateThread(NULL, 0, AddDrone_0Proc, 0, 0, &dwThreadId2);//AddDrone
-	CreateThread(NULL, 0, AddDrone_1Proc, 0, 0, &dwThreadId3);
-	//CreateThread(NULL, 0, AddDrone_2Proc, 0, 0, &dwThreadId4);
+	hThread[0] = CreateThread(NULL, 0, AddDrone_0Proc, 0, 0, NULL);//AddDrone
+	hThread[1] = CreateThread(NULL, 0, AddDrone_1Proc, 0, 0, NULL);
+	hThread[2] = CreateThread(NULL, 0, AddDrone_2Proc, 0, 0, NULL);
 	//CreateThread(NULL, 0, AddDrone_3Proc, 0, 0, &dwThreadId5);
 	//CreateThread(NULL, 0, AddDrone_4Proc, 0, 0, &dwThreadId6);
 	//CreateThread(NULL, 0, AddDrone_5Proc, 0, 0, &dwThreadId7);
@@ -535,7 +541,7 @@ int main(int argc, char *argv[])
 	//CreateThread(NULL, 0, AddDrone_17Proc, 0, 0, &dwThreadId19);
 	//CreateThread(NULL, 0, AddDrone_18Proc, 0, 0, &dwThreadId20);// all 20
 
-	
+
 	recvforcestate = 1;
 	sClient = accept(serSocket, (SOCKADDR *)&remoteAddr, &nAddrlen);
 
@@ -545,40 +551,28 @@ int main(int argc, char *argv[])
 		RecvLock[m] = 1;
 	}
 
-
-
+	FILE *file = fopen(File0, "wb+");
 	while (time <= SimulationTime)
 	{
+		//WaitForMultipleObjects(TestNum, g_hThreadEvent, TRUE, INFINITE);
+		SetEvent(g_hThreadEvent[0]); //触发事件 
+		SetEvent(g_hThreadEvent[1]);
+		SetEvent(g_hThreadEvent[2]);
 		//ret = recvfrom(serSocket, revdata, 255, 0, (SOCKADDR*)&remoteAddr, &nAddrlen);
 		//FD_ZERO(&rfd);           //总是这样先清空一个描述符集
 		//FD_SET(serSocket, &rfd); //把sock放入要测试的描述符集
 		//SelectRcv = select(serSocket + 1, &rfd, 0, 0, &timeout); //检查该套接字是否可读
 		//FD_ISSET(serSocket, &fdread)
-
 		//if (FD_ISSET(serSocket, &rfd))
 		//sClient = accept(serSocket, (SOCKADDR *)&remoteAddr, &nAddrlen);
 		//ret = recvfrom(sClient, revdata, 255, 0, (SOCKADDR*)&remoteAddr, &nAddrlen);
 		ret = recv(sClient, revdata, 255, 0);
 		/* SET THE INPUTS TO THE AMESIM MODEL HERE */
 		int INTTime = (int)(time * 10);//0.1s
+		WaitForSingleObject(g_hThreadEvent[0], INFINITE);//等待信号量 
+		if (ret > 0) {
 
-		//同步机制
-		//for (int m = 0; m < TestNum; m++) {
-		//	if (RecvLock[m] == 1) {
-		//		RecvLockNum = RecvLockNum +1;
-		//	}
-		//	else {
-		//		RecvLockNum = 0;
-		//		break;
-		//	}
-		//}
-		RecvLockNum = TestNum;
-		printf("RecvLockNum=%d\r\n", RecvLockNum);
-		if (ret > 0 && RecvLockNum == TestNum) {
 			memcpy(recvdata, revdata, sizeof(recvdata));
-
-			RecvLockNum = 0;
-			RecvLock[0] = 0;
 
 			for (i = 0; i < numinputs_to_model; i++)
 			{
@@ -611,10 +605,10 @@ int main(int argc, char *argv[])
 			}
 
 
-			for (i = 0; i < numinputs_to_model; i++)
-			{
-				printf("inputs1[%d] = %f\n", i, inputs[i]);//x
-			}
+			//for (i = 0; i < numinputs_to_model; i++)
+			//{
+			//	printf("inputs1[%d] = %f\n", i, inputs[i]);//x
+			//}
 
 			if (CollisioneState == TRUE) {
 				for (int n = 0; n < 6; n++) {
@@ -658,7 +652,7 @@ int main(int argc, char *argv[])
 			* the AMESim model at time "time".
 			* In this simple example we only print the values. */
 
-			fprintf(stdout, "time0 = %.3f\t", time);
+			printf("time0 = %.3f\t\n", time);
 			//for (i = 0; i < numoutputs_from_model; i++)//numoutputs_from_model = 6
 			//{
 			//	fprintf(stdout, "out%d = %.3f\t", i, outputs[i]);
@@ -673,25 +667,23 @@ int main(int argc, char *argv[])
 			sendstate[0] = 1;
 
 
-
-			//printf("senddata[3] = %f\n", senddata[3]);//x
-			//pthread_mutex_unlock(&mut);
-			//memcpy(senddata, (float*)outputs, sizeof(senddata)); //指针只指向前32位 
-			//printf(" sizeof(senddata)=%d\n", sizeof(senddata));
-			//sendto(sclient, senddata, strlen(senddata), 0, (SOCKADDR*)&clientAddr, len);
-
-
+			fprintf(file, "time0 = %.3f\t\n", time);
+			for (i = 0; i < numoutputs_from_model; i++)//numoutputs_from_model = 6
+			{
+				fprintf(file, "out0_%d = %.3f\t", i, outputs[i]);
+			}
+			fprintf(file, "\n");
 
 			/* Update the time for the next step */
 			time += samptime;
 			syncTime = time;
-			RecvLock[0] = 1;
+
 		}
 	}
 
 	/* Allow for a "clean" end of the AMESim model with Terminate. */
 	amedll.AMETerminate();
-
+	fclose(file);
 	/* Tell the operating system we no longer use the DLL
 	(freeamesimdll). This will normally unload the DLL. In this
 	example it does not matter, but if one wants to perform several
@@ -700,12 +692,15 @@ int main(int argc, char *argv[])
 	(re-)initialized when loading it. After the call to
 	freeamesimdll it is not possible to use the model until a
 	loadamesimdll has been done.*/
-	printf("DONE AND CLOSE\n");
+	for (int i = 0; i < TestNum; i++) {
+		CloseHandle(g_hThreadEvent[i]);
+	}
+
 	recvforcestate = 0;
 	unloadamesimdll(&amedll);
 	closesocket(serSocket);
 	WSACleanup();
-	//CloseHandle(dwThreadId);
+	printf("DONE AND CLOSE\n");
 	system("pause");
 	return 0;
 }
