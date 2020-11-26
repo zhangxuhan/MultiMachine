@@ -87,11 +87,7 @@ void AddDrone_9()
 
 	while (time <= SimulationTime)
 	{
-		//Sleep(1);
-		if (RecvLockNum == TestNum) {
-			RecvLock[TestPlane] = 0;
-			RecvLockNum = 0;
-			//pthread_mutex_lock(&mut);
+		WaitForSingleObject(g_hThreadEvent[10], INFINITE);
 			for (i = 0; i < numinputs_to_model; i++)
 			{
 				if (i == 0)
@@ -161,8 +157,7 @@ void AddDrone_9()
 
 
 			time += samptime;
-			RecvLock[TestPlane] = 1;
-		}
+			SetEvent(g_EndThreadEvent[10]);
 	}
 	amedll.AMETerminate();
 	unloadamesimdll(&amedll);

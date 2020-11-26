@@ -87,11 +87,7 @@ void AddDrone_8()
 	FILE *file = fopen(File9, "wb+");
 	while (time <= SimulationTime)
 	{
-		//Sleep(1);
-		if (RecvLockNum == TestNum) {
-			RecvLock[TestPlane] = 0;
-			RecvLockNum = 0;
-			//pthread_mutex_lock(&mut);
+		WaitForSingleObject(g_hThreadEvent[9], INFINITE);
 			for (i = 0; i < numinputs_to_model; i++)
 			{
 				if (i == 0)
@@ -149,6 +145,7 @@ void AddDrone_8()
 			//	fprintf(stdout, "out9_%d = %.3f\t", i, outputs[i]);
 			//}
 			//fprintf(stdout, "\n");
+			printf("time9 = %.3f\t\n", time);
 			fprintf(file, "time = %.3f\t", time);
 			for (i = 0; i < numoutputs_from_model; i++)//numoutputs_from_model = 6
 			{
@@ -167,8 +164,7 @@ void AddDrone_8()
 
 
 			time += samptime;
-			RecvLock[TestPlane] = 1;
-		}
+			SetEvent(g_EndThreadEvent[9]);
 	}
 	fclose(file);
 	amedll.AMETerminate();

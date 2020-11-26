@@ -13,7 +13,7 @@
 #include "import_dll_utils.h"
 
 #define DroneNum 2	//无人机数量
-#define TestNum 3	
+#define TestNum 10	
 #define SendData_Single  6//单机数据量
 #define RecvdData_Single  5
 #define SendDataAmount SendData_Single*DroneNum  //总数据量
@@ -37,7 +37,8 @@
 
 pthread_t thread[10]; //创建线程函数返回类型
 pthread_mutex_t mut; //互斥锁类型
-HANDLE  g_hThreadEvent[TestNum];
+HANDLE g_hThreadEvent[TestNum];
+HANDLE g_EndThreadEvent[TestNum];
 HANDLE hThread[TestNum];
 
 

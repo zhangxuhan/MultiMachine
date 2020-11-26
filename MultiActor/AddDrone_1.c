@@ -59,7 +59,7 @@ void AddDrone_1()
 		fprintf(stdout, "MASTER> Setting model directory to %s\n", tmpfullname);
 		amedll.AMEWorkingDir(tmpfullname);
 	}
-	
+
 	amedll.AMEWorkingDir("..\\");
 	{
 		int ame_says_numinputs;
@@ -83,90 +83,85 @@ void AddDrone_1()
 		inputs[i] = 0; /* any other signal */
 
 	}
-	
+
 
 	FILE *file = fopen(File2, "wb+");
 	while (time <= SimulationTime)
 	{
 		WaitForSingleObject(g_hThreadEvent[2], INFINITE);//等待信号量 
-		//Sleep(1);
-		//if (RecvLockNum == TestNum) {
-		//	RecvLock[2] = 0;
-		//	RecvLockNum = 0;
-			//pthread_mutex_lock(&mut);
-			for (i = 0; i < numinputs_to_model; i++)
+		for (i = 0; i < numinputs_to_model; i++)
+		{
+			if (i == 0)
 			{
-				if (i == 0)
-				{
-					inputs[i] = recvdata[RecvdData_Single * WhichPlane]; /* x */
-					//inputs[i] = -500;
-				}
-				else if (i == 1)
-				{
-					inputs[i] = recvdata[RecvdData_Single * WhichPlane +1]; /* y */
-				}
-				else if (i == 2)
-				{
-					inputs[i] = recvdata[RecvdData_Single * WhichPlane + 2]; /*z */
-				}
-				else if (i == 3)
-				{
-					inputs[i] = recvdata[RecvdData_Single * WhichPlane + 3]; /* yaw */
-				}
-				else if (i == 4)
-				{
-					inputs[i] = recvdata[RecvdData_Single * WhichPlane + 4]; /* bool */
-				}
-				else
-				{
-					inputs[i] = 0; /* Force	   X Y Z
-									  Movement X Y Z
-									  = 6 */
-				}
-			} 
-			
-			if (!model_initialised)
-			{
-				pthread_mutex_lock(&mut);
-				fprintf(stdout, "MASTER> Starting simulation with a call to InitModel.\n\n");
-				amedll.AMEInitModel(time, printinter, samptime, tol, errtype, writelevel,
-					disconpr, runstats, runtype, thesolvertype,
-					numinputs_to_model, numoutputs_from_model, inputs, outputs);
-				model_initialised = 1;
-				pthread_mutex_unlock(&mut);
+				inputs[i] = recvdata[RecvdData_Single * WhichPlane]; /* x */
+				//inputs[i] = -500;
 			}
-			
-			//pthread_mutex_lock(&mut);
-			amedll.AMEdoAStep2(time, numinputs_to_model, numoutputs_from_model, inputs, outputs);
-			//pthread_mutex_unlock(&mut);
-
-
-			//for (i = 0; i < numinputs_to_model; i++)
-			//{
-			//	printf("inputs3[%d] = %f\n", i, inputs[i]);//x
-			//}
-
-			printf("time2 = %.3f\t\n", time);
-
-			fprintf(file, "time = %.3f\t", time);
-			for (i = 0; i < numoutputs_from_model; i++)//numoutputs_from_model = 6
+			else if (i == 1)
 			{
-				fprintf(file, "out_%d = %.3f\t", i, outputs[i]);
+				inputs[i] = recvdata[RecvdData_Single * WhichPlane + 1]; /* y */
 			}
-			fprintf(file, "\n");
+			else if (i == 2)
+			{
+				inputs[i] = recvdata[RecvdData_Single * WhichPlane + 2]; /*z */
+			}
+			else if (i == 3)
+			{
+				inputs[i] = recvdata[RecvdData_Single * WhichPlane + 3]; /* yaw */
+			}
+			else if (i == 4)
+			{
+				inputs[i] = recvdata[RecvdData_Single * WhichPlane + 4]; /* bool */
+			}
+			else
+			{
+				inputs[i] = 0; /* Force	   X Y Z
+								  Movement X Y Z
+								  = 6 */
+			}
+		}
 
-
-
+		if (!model_initialised)
+		{
 			pthread_mutex_lock(&mut);
-			//for (int i = (SendData_Single * WhichPlane); 
-			//	i < (SendData_Single * WhichPlane + SendData_Single); i++) { //6-11
-			//	senddata[i] = (float)(outputs[i - (SendData_Single * WhichPlane)]);
-			//}
+			fprintf(stdout, "MASTER> Starting simulation with a call to InitModel.\n\n");
+			amedll.AMEInitModel(time, printinter, samptime, tol, errtype, writelevel,
+				disconpr, runstats, runtype, thesolvertype,
+				numinputs_to_model, numoutputs_from_model, inputs, outputs);
+			model_initialised = 1;
 			pthread_mutex_unlock(&mut);
+		}
+
+		//pthread_mutex_lock(&mut);
+		amedll.AMEdoAStep2(time, numinputs_to_model, numoutputs_from_model, inputs, outputs);
+		//pthread_mutex_unlock(&mut);
 
 
-			time += samptime;
-		//	ReleaseSemaphore(hSemp2, 1, NULL);//释放信号量 
+		//for (i = 0; i < numinputs_to_model; i++)
+		//{
+		//	printf("inputs3[%d] = %f\n", i, inputs[i]);//x
+		//}
+
+		printf("time2 = %.3f\t", time);
+
+		fprintf(file, "time = %.3f\t", time);
+		for (i = 0; i < numoutputs_from_model; i++)//numoutputs_from_model = 6
+		{
+			fprintf(file, "out_%d = %.3f\t", i, outputs[i]);
+		}
+		fprintf(file, "\n");
+
+
+
+		pthread_mutex_lock(&mut);
+		//for (int i = (SendData_Single * WhichPlane); 
+		//	i < (SendData_Single * WhichPlane + SendData_Single); i++) { //6-11
+		//	senddata[i] = (float)(outputs[i - (SendData_Single * WhichPlane)]);
+		//}
+		pthread_mutex_unlock(&mut);
+
+
+		time += samptime;
+		SetEvent(g_EndThreadEvent[2]);
 	}
 	fclose(file);
 	amedll.AMETerminate();

@@ -60,9 +60,6 @@
     <ClCompile Include="MultiActor\AddDrone_3.c">
       <Filter>源文件\MultiActor</Filter>
     </ClCompile>
-    <ClCompile Include="AddDrone_0.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="MultiActor\AddDrone_5.c">
       <Filter>源文件\MultiActor</Filter>
     </ClCompile>
@@ -109,6 +106,9 @@
       <Filter>源文件\MultiActor</Filter>
     </ClCompile>
     <ClCompile Include="MultiActor\AddDrone_19.c">
+      <Filter>源文件\MultiActor</Filter>
+    </ClCompile>
+    <ClCompile Include="AddDrone_0.c">
       <Filter>源文件\MultiActor</Filter>
     </ClCompile>
   </ItemGroup>

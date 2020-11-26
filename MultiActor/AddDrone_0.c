@@ -1,14 +1,28 @@
 #define _CRT_SECURE_NO_WARNINGS
 
-#define WhichPlane 1//第几架机
+#include <math.h>
+#include <stdio.h>
+#include <winsock2.h>
+#include <WS2tcpip.h>
+#include <stdlib.h>
 
-#include "..\AddDrone.h"
+//#include "ame_api.h"
+//#include "ame_api_errors.h"
 
+#include "AddDrone.h"
+
+
+
+//int main(int argc, char *argv[])
+//{
+//	AddDrone();
+//}
 
 #pragma comment(lib, "pthreadVC2.lib")
-void AddDrone_4()
+void AddDrone()
 {
-	//pthread_mutex_init(&mut, NULL);
+	pthread_mutex_init(&mut, NULL);
+	//AMEOpenAmeF0ile("1");
 	double samptime = 0.05; /* Sample interval */
 	double printinter = samptime / 5.0; /* How often will AMESim model write the result file */
 	double tol = 1e-5; /* Solver tolerance */
@@ -37,7 +51,7 @@ void AddDrone_4()
 	char *libname = "..\\drone_asd_ectype_.dll";
 #endif
 #ifdef DroneWithError
-	char *libname = "..\\drone_asd_error5_.dll";
+	char *libname = "..\\drone_asd_error1_.dll";
 #endif // DroneWithError
 
 	if (!loadamesimdll(libname, &amedll))
@@ -59,7 +73,7 @@ void AddDrone_4()
 		fprintf(stdout, "MASTER> Setting model directory to %s\n", tmpfullname);
 		amedll.AMEWorkingDir(tmpfullname);
 	}
-
+	
 	amedll.AMEWorkingDir("..\\");
 	{
 		int ame_says_numinputs;
@@ -83,85 +97,94 @@ void AddDrone_4()
 		inputs[i] = 0; /* any other signal */
 
 	}
-
-	FILE *file = fopen(File5, "wb+");
-	while (time <= SimulationTime)
-	{
-		WaitForSingleObject(g_hThreadEvent[5], INFINITE);
-		for (i = 0; i < numinputs_to_model; i++)
-		{
-			if (i == 0)
-			{
-				//inputs[i] = 300;
-				inputs[i] = recvdata[RecvdData_Single * WhichPlane]; /* x */
-			}
-			else if (i == 1)
-			{
-				inputs[i] = recvdata[RecvdData_Single * WhichPlane + 1]; /* y */
-			}
-			else if (i == 2)
-			{
-				inputs[i] = recvdata[RecvdData_Single * WhichPlane + 2]; /*z */
-			}
-			else if (i == 3)
-			{
-				inputs[i] = recvdata[RecvdData_Single * WhichPlane + 3]; /* yaw */
-			}
-			else if (i == 4)
-			{
-				inputs[i] = recvdata[RecvdData_Single * WhichPlane + 4]; /* bool */
-			}
-			else
-			{
-				inputs[i] = 0; /* Force	   X Y Z
-								  Movement X Y Z
-								  = 6 */
-			}
-		}
-
-		if (!model_initialised)
-		{
-			pthread_mutex_lock(&mut);
-			fprintf(stdout, "MASTER> Starting simulation with a call to InitModel.\n\n");
-			amedll.AMEInitModel(time, printinter, samptime, tol, errtype, writelevel,
-				disconpr, runstats, runtype, thesolvertype,
-				numinputs_to_model, numoutputs_from_model, inputs, outputs);
-			model_initialised = 1;
-			pthread_mutex_unlock(&mut);
-		}
-
-		amedll.AMEdoAStep2(time, numinputs_to_model, numoutputs_from_model, inputs, outputs);
 	
 
-		//for (i = 0; i < numinputs_to_model; i++)
-		//{
-		//	printf("inputs4[%d] = %f\n", i, inputs[i]);//x
-		//}
-		//fprintf(stdout, "time4 = %.3f\t", time);
-		//for (i = 0; i < numoutputs_from_model; i++)//numoutputs_from_model = 6
-		//{
-		//	fprintf(stdout, "out4_%d = %.3f\t", i, outputs[i]);
-		//}
-		//fprintf(stdout, "\n");
-		printf("time5 = %.3f\t", time);
-		fprintf(file, "time = %.3f\t", time);
-		for (i = 0; i < numoutputs_from_model; i++)//numoutputs_from_model = 6
-		{
-			fprintf(file, "out_%d = %.3f\t", i, outputs[i]);
-		}
-		fprintf(file, "\n");
+	FILE *file = fopen(File1, "wb+");
+	while (time <= SimulationTime)
+	{
+		WaitForSingleObject(g_hThreadEvent[1], INFINITE);//等待信号量 
+
+			for (i = 0; i < numinputs_to_model; i++)
+			{
+				if (i == 0)
+				{
+					inputs[i] = recvdata[5]; /* x */
+				}
+				else if (i == 1)
+				{
+					inputs[i] = recvdata[6]; /* y */
+				}
+				else if (i == 2)
+				{
+					inputs[i] = recvdata[7]; /*z */
+				}
+				else if (i == 3)
+				{
+					inputs[i] = recvdata[8]; /* yaw */
+				}
+				else if (i == 4)
+				{
+					inputs[i] = recvdata[9]; /* bool */
+				}
+				else
+				{
+					inputs[i] = 0; /* Force	   X Y Z
+									  Movement X Y Z
+									  = 6 */
+				}
+			} 
+			
+			if (!model_initialised)
+			{
+				pthread_mutex_lock(&mut);
+				fprintf(stdout, "MASTER> Starting simulation with a call to InitModel.\n\n");
+				amedll.AMEInitModel(time, printinter, samptime, tol, errtype, writelevel,
+					disconpr, runstats, runtype, thesolvertype,
+					numinputs_to_model, numoutputs_from_model, inputs, outputs);
+				model_initialised = 1;
+				pthread_mutex_unlock(&mut);
+			}
+			
+			pthread_mutex_lock(&mut);
+			amedll.AMEdoAStep2(time, numinputs_to_model, numoutputs_from_model, inputs, outputs);
+			pthread_mutex_unlock(&mut);
 
 
-		pthread_mutex_lock(&mut);
-		//for (int i = (SendData_Single * WhichPlane); 
-		//	i < (SendData_Single * WhichPlane + SendData_Single); i++) { //6-11
-		//	senddata[i] = (float)(outputs[i - (SendData_Single * WhichPlane)]);
-		//}
-		pthread_mutex_unlock(&mut);
+			//for (i = 0; i < numinputs_to_model; i++)
+			//{
+			//	printf("inputs2[%d] = %f\n", i, inputs[i]);//x
+			//}
+			////pthread_mutex_unlock(&mut);
+			//fprintf(stdout, "time2 = %.3f\t", time);
+			//for (i = 0; i < numoutputs_from_model; i++)//numoutputs_from_model = 6
+			//{
+			//	fprintf(stdout, "out2_%d = %.3f\t", i, outputs[i]);
+			//}
+			//fprintf(stdout, "\n");
 
 
-		time += samptime;
-		SetEvent(g_EndThreadEvent[5]);
+
+
+			pthread_mutex_lock(&mut);
+
+			for (int i = 6; i < 12; i++) { //6-11
+				senddata[i] = (float)(outputs[i - 6]);
+			}
+			//SendLock += 1;
+			pthread_mutex_unlock(&mut);
+			sendstate[1] = 1;
+			
+			//printf("senddata[9] = %f\n", senddata[9]);//x1
+
+			printf("time1 = %.3f\t\n", time);
+			fprintf(file, "time1 = %.3f\t", time);
+			for (i = 0; i < numoutputs_from_model; i++)//numoutputs_from_model = 6
+			{
+				fprintf(file, "out1_%d = %.3f\t", i, outputs[i]);
+			}
+			fprintf(file, "\n");
+
+			time += samptime;
 	}
 	fclose(file);
 	amedll.AMETerminate();
@@ -169,3 +192,6 @@ void AddDrone_4()
 	system("pause");
 }
 
+void DataInteraction()
+{
+}

@@ -513,8 +513,10 @@ int main(int argc, char *argv[])
 	for (int i = 0; i < TestNum; i++) {
 		g_hThreadEvent[i] = CreateEvent(NULL, FALSE, FALSE, NULL);
 	}
-
-
+	for (int i = 0; i < TestNum; i++) {
+		g_EndThreadEvent[i] = CreateEvent(NULL, FALSE, TRUE, NULL);
+	}
+	
 	//SEND
 	CreateThread(NULL, 0, ThreadProc, 0, 0, &dwThreadId);
 	//RecvForce
@@ -524,12 +526,12 @@ int main(int argc, char *argv[])
 	hThread[0] = CreateThread(NULL, 0, AddDrone_0Proc, 0, 0, NULL);//AddDrone
 	hThread[1] = CreateThread(NULL, 0, AddDrone_1Proc, 0, 0, NULL);
 	hThread[2] = CreateThread(NULL, 0, AddDrone_2Proc, 0, 0, NULL);
-	//CreateThread(NULL, 0, AddDrone_3Proc, 0, 0, &dwThreadId5);
-	//CreateThread(NULL, 0, AddDrone_4Proc, 0, 0, &dwThreadId6);
-	//CreateThread(NULL, 0, AddDrone_5Proc, 0, 0, &dwThreadId7);
-	//CreateThread(NULL, 0, AddDrone_6Proc, 0, 0, &dwThreadId8);
-	//CreateThread(NULL, 0, AddDrone_7Proc, 0, 0, &dwThreadId9);//9台
-	//CreateThread(NULL, 0, AddDrone_8Proc, 0, 0, &dwThreadId10);
+	CreateThread(NULL, 0, AddDrone_3Proc, 0, 0, &dwThreadId5);
+	CreateThread(NULL, 0, AddDrone_4Proc, 0, 0, &dwThreadId6);
+	CreateThread(NULL, 0, AddDrone_5Proc, 0, 0, &dwThreadId7);
+	CreateThread(NULL, 0, AddDrone_6Proc, 0, 0, &dwThreadId8);
+	CreateThread(NULL, 0, AddDrone_7Proc, 0, 0, &dwThreadId9);//9台
+	CreateThread(NULL, 0, AddDrone_8Proc, 0, 0, &dwThreadId10);
 	//CreateThread(NULL, 0, AddDrone_9Proc, 0, 0, &dwThreadId11);
 	//CreateThread(NULL, 0, AddDrone_10Proc, 0, 0, &dwThreadId12);
 	//CreateThread(NULL, 0, AddDrone_11Proc, 0, 0, &dwThreadId13);
@@ -550,14 +552,14 @@ int main(int argc, char *argv[])
 	for (int m = 0; m < TestNum; m++) {
 		RecvLock[m] = 1;
 	}
+	//for (int i = 0; i < TestNum; i++) {
+	//	SetEvent(g_EndThreadEvent[i]); //触发事件 
+	//}
 
 	FILE *file = fopen(File0, "wb+");
 	while (time <= SimulationTime)
 	{
 		//WaitForMultipleObjects(TestNum, g_hThreadEvent, TRUE, INFINITE);
-		SetEvent(g_hThreadEvent[0]); //触发事件 
-		SetEvent(g_hThreadEvent[1]);
-		SetEvent(g_hThreadEvent[2]);
 		//ret = recvfrom(serSocket, revdata, 255, 0, (SOCKADDR*)&remoteAddr, &nAddrlen);
 		//FD_ZERO(&rfd);           //总是这样先清空一个描述符集
 		//FD_SET(serSocket, &rfd); //把sock放入要测试的描述符集
@@ -569,9 +571,15 @@ int main(int argc, char *argv[])
 		ret = recv(sClient, revdata, 255, 0);
 		/* SET THE INPUTS TO THE AMESIM MODEL HERE */
 		int INTTime = (int)(time * 10);//0.1s
-		WaitForSingleObject(g_hThreadEvent[0], INFINITE);//等待信号量 
-		if (ret > 0) {
 
+		if (ret > 0) {
+			//等待所有执行完毕 *
+			WaitForMultipleObjects(TestNum, g_EndThreadEvent, TRUE, INFINITE);
+			//同步
+			for (int i = 0; i < TestNum; i++) {
+				SetEvent(g_hThreadEvent[i]); //触发事件 
+			}
+			WaitForSingleObject(g_hThreadEvent[0], INFINITE);//等待信号量 
 			memcpy(recvdata, revdata, sizeof(recvdata));
 
 			for (i = 0; i < numinputs_to_model; i++)
@@ -652,7 +660,7 @@ int main(int argc, char *argv[])
 			* the AMESim model at time "time".
 			* In this simple example we only print the values. */
 
-			printf("time0 = %.3f\t\n", time);
+			printf("time0 = %.3f\t", time);
 			//for (i = 0; i < numoutputs_from_model; i++)//numoutputs_from_model = 6
 			//{
 			//	fprintf(stdout, "out%d = %.3f\t", i, outputs[i]);
@@ -667,7 +675,7 @@ int main(int argc, char *argv[])
 			sendstate[0] = 1;
 
 
-			fprintf(file, "time0 = %.3f\t\n", time);
+			fprintf(file, "time0 = %.3f\t", time);
 			for (i = 0; i < numoutputs_from_model; i++)//numoutputs_from_model = 6
 			{
 				fprintf(file, "out0_%d = %.3f\t", i, outputs[i]);
@@ -677,7 +685,7 @@ int main(int argc, char *argv[])
 			/* Update the time for the next step */
 			time += samptime;
 			syncTime = time;
-
+			SetEvent(g_EndThreadEvent[0]);
 		}
 	}
 

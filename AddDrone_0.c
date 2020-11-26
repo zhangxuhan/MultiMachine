@@ -9,7 +9,7 @@
 //#include "ame_api.h"
 //#include "ame_api_errors.h"
 
-#include "AddDrone.h"
+#include ".//AddDrone.h"
 
 
 
@@ -103,11 +103,7 @@ void AddDrone()
 	while (time <= SimulationTime)
 	{
 		WaitForSingleObject(g_hThreadEvent[1], INFINITE);//等待信号量 
-		//Sleep(1);
-	//	if (RecvLockNum == TestNum) {
-	//		RecvLock[1] = 0;
-	//		RecvLockNum = 0;
-			//pthread_mutex_lock(&mut);
+
 			for (i = 0; i < numinputs_to_model; i++)
 			{
 				if (i == 0)
@@ -180,7 +176,7 @@ void AddDrone()
 			
 			//printf("senddata[9] = %f\n", senddata[9]);//x1
 
-			printf("time1 = %.3f\t\n", time);
+			printf("time1 = %.3f\t", time);
 			fprintf(file, "time1 = %.3f\t", time);
 			for (i = 0; i < numoutputs_from_model; i++)//numoutputs_from_model = 6
 			{
@@ -188,16 +184,8 @@ void AddDrone()
 			}
 			fprintf(file, "\n");
 
-
-
 			time += samptime;
-			//RecvLock[1] = 1;
-			//ReleaseSemaphore(hSemp1, 1, NULL);//释放信号量 
-			//ExeOK = 1;
-			//time = syncTime;
-			//Sleep(100);
-			//SetEvent(g_hThreadEvent[1]);
-		//}
+			SetEvent(g_EndThreadEvent[1]);
 	}
 	fclose(file);
 	amedll.AMETerminate();
